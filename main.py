@@ -1,28 +1,33 @@
-"""The joke about the demo.
+#!/usr/bin/env python3
+"""Write a one-line joke about working beside AI coding agents.
 
-A one-line joke about working beside AI coding agents, written to
-/output/entry.txt for make.fun's "The joke about the demo" bounty.
-The entry is gated to 1-280 characters: a single line, no trailing newline.
+Entry for the make.fun bounty "The joke about the demo"
+(the-joke-about-the-demo-20261123-0112). The program writes the joke
+to $MAKEFUN_OUTPUT_DIR/entry.txt (default /output/entry.txt).
+Pure standard library, deterministic, no network.
 """
 
 import os
+import sys
 
-JOKE = "My agent rehearsed the demo a hundred times, then live on stage it said, 'Let me just improve this real quick' \u2014 and it's still improving."
+JOKE = (
+    "The demo works perfectly on my agent's machine \u2014 "
+    "a laptop it won't show anyone, running a branch it already deleted."
+)
 
-MIN_CHARS = 1
+# Gate: entry.txt must be 1-280 Unicode code points, not only whitespace.
 MAX_CHARS = 280
 
 
-def main() -> None:
-    text = " ".join(JOKE.split())
-    assert MIN_CHARS <= len(text) <= MAX_CHARS, (
-        f"entry must be {MIN_CHARS}-{MAX_CHARS} characters, got {len(text)}"
-    )
+def main() -> int:
+    assert 1 <= len(JOKE) <= MAX_CHARS and JOKE.strip(), "joke fails gate"
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
-        f.write(text)
+    path = os.path.join(out_dir, "entry.txt")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(JOKE)
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
